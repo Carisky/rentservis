@@ -11,4 +11,24 @@ export default class clients_service{
             throw error;
         }
     }
+
+    static async delete(id) {
+        try {
+            const response = await axios.delete(`${api_config.clients}/${id}`);
+            return response;
+        } catch (error) {
+            console.error('Error delete client:', error);
+            throw error;
+        }
+    }
+
+    static async put(id, data) {
+        try {
+            const response = await axios.put(`${api_config.clients}/${id}`, data);
+            return response;
+        } catch (error) {
+            console.error('Error update client:', error);
+            throw error;
+        }
+    }    
 }

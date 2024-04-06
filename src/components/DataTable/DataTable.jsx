@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 
-export default function DataTable({ columns, rows, itemsPerPage = 10 }) {
+export default function DataTable({
+  columns,
+  rows,
+  itemsPerPage = 10,
+  onDelete,
+  onPut,
+  showActions,
+  showDeleteButton,
+  showChangeButton
+}) {
   // Function to safely access nested properties
   const getProperty = (obj, path) => {
     return path.split(".").reduce((acc, part) => acc && acc[part], obj);
@@ -15,14 +24,39 @@ export default function DataTable({ columns, rows, itemsPerPage = 10 }) {
     setCurrentPage(1); // Reset current page when changing filters
   };
 
-  const filteredRows = rows.filter(row => {
+  const [inputStates, setInputStates] = useState([]);
+
+  useEffect(() => {
+    setInputStates(
+      rows.map((row) =>
+        columns.reduce((acc, column) => {
+          if (column.key !== "id") {
+            acc[column.key] = getProperty(row, column.key);
+          }
+          return acc;
+        }, {})
+      )
+    );
+  }, [rows, columns]);
+
+  const handleInputChange = (rowIndex, columnKey, value) => {
+    setInputStates((prevState) => {
+      const newState = [...prevState];
+      newState[rowIndex][columnKey] = value;
+      return newState;
+    });
+  };
+
+  const filteredRows = rows.filter((row) => {
     // Check if each column has a filter value, and apply the filter
-    return columns.every(column => {
+    return columns.every((column) => {
       const filterValue = filters[column.key];
       if (!filterValue) return true; // If no filter value, keep the row
 
       const cellValue = getProperty(row, column.key);
-      return String(cellValue).toLowerCase().includes(filterValue.toLowerCase());
+      return String(cellValue)
+        .toLowerCase()
+        .includes(filterValue.toLowerCase());
     });
   });
 
@@ -40,7 +74,7 @@ export default function DataTable({ columns, rows, itemsPerPage = 10 }) {
             type="text"
             placeholder={`Filter ${column.header}`}
             value={filters[column.key] || ""}
-            onChange={e => handleFilterChange(column.key, e.target.value)}
+            onChange={(e) => handleFilterChange(column.key, e.target.value)}
           />
         ))}
       </div>
@@ -51,15 +85,41 @@ export default function DataTable({ columns, rows, itemsPerPage = 10 }) {
               {column.header}
             </div>
           ))}
+          {showActions && <div className={styles.table_header_cell}>Actions</div>}
         </div>
         <div className={styles.table_body}>
           {paginatedRows.map((row, rowIndex) => (
             <div key={rowIndex} className={styles.table_row}>
               {columns.map((column, colIndex) => (
                 <div key={colIndex} className={styles.table_cell}>
-                  {getProperty(row, column.key)}
+                  {column.key !== "id" ? (
+                    <input
+                      type="text"
+                      value={inputStates[rowIndex]?.[column.key] || ""}
+                      onChange={(e) =>
+                        handleInputChange(rowIndex, column.key, e.target.value)
+                      }
+                    />
+                  ) : (
+                    getProperty(row, column.key)
+                  )}
                 </div>
               ))}
+
+              {showActions && (
+                <div className={styles.table_cell}>
+                  {showDeleteButton && (
+                    <button onClick={() => onDelete(row.id)}>Delete</button>
+                  )}
+                  {showChangeButton && (
+                    <button
+                      onClick={() => onPut(row.id, inputStates[rowIndex])}
+                    >
+                      Change
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

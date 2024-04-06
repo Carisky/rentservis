@@ -8,35 +8,60 @@ export default function Clients() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const clientsData = await clients_service.findAll();
-        setClients(clientsData);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching clients:", error);
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const clientsData = await clients_service.findAll();
+      setClients(clientsData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+      setLoading(false);
+    }
+  };
 
+  const onDelete = async (id) => {
+    try {
+      await clients_service.delete(id);
+      setClients(clients.filter((client) => client.id !== id));
+    } catch (error) {
+      console.error("Error deleting client:", error);
+    }
+  };
+
+  const onPut = async (id, data) => {
+    try {
+      await clients_service.put(id, data);
+    } catch (error) {
+      console.error("Error update client:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
-  // Define columns for the DataTable
   const columns = [
     { header: "ID", key: "id" },
     { header: "Name", key: "name" },
     { header: "Phone", key: "phone" },
-    { header: "Address", key: "address" }
+    { header: "Address", key: "address" },
   ];
 
   return (
     <PageWrap>
       {loading ? (
-        <Loader/>
+        <Loader />
       ) : (
-        <DataTable columns={columns} itemsPerPage={10} rows={clients} />
+        <DataTable
+          showActions={true}
+          showDeleteButton={true}
+          showChangeButton={true}
+          columns={columns}
+          onDelete={onDelete}
+          onPut={onPut}
+          itemsPerPage={10}
+          rows={clients}
+        />
       )}
     </PageWrap>
   );
