@@ -1,0 +1,17 @@
+.navbox{
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+    height: 40px;
+    color: aliceblue;
+}
+.navlist{
+    display: flex;
+    background-color: rgb(22, 21, 21);
+}
+.active{
+    background-color: rgb(7, 77, 53);
+}
