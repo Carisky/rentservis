@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.css";
-
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 export default function DataTable({
   columns,
   rows,
@@ -9,7 +10,7 @@ export default function DataTable({
   onPut,
   showActions,
   showDeleteButton,
-  showChangeButton
+  showChangeButton,
 }) {
   // Function to safely access nested properties
   const getProperty = (obj, path) => {
@@ -85,7 +86,9 @@ export default function DataTable({
               {column.header}
             </div>
           ))}
-          {showActions && <div className={styles.table_header_cell}>Actions</div>}
+          {showActions && (
+            <div className={styles.table_header_cell}>Actions</div>
+          )}
         </div>
         <div className={styles.table_body}>
           {paginatedRows.map((row, rowIndex) => (
@@ -109,14 +112,20 @@ export default function DataTable({
               {showActions && (
                 <div className={styles.table_cell}>
                   {showDeleteButton && (
-                    <button onClick={() => onDelete(row.id)}>Delete</button>
+                    <DeleteForeverIcon
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                      onClick={() => onDelete(row.id)}
+                    />
                   )}
                   {showChangeButton && (
-                    <button
+                    <BookmarkAddedIcon
+                      sx={{
+                        cursor: "pointer",
+                      }}
                       onClick={() => onPut(row.id, inputStates[rowIndex])}
-                    >
-                      Change
-                    </button>
+                    />
                   )}
                 </div>
               )}
