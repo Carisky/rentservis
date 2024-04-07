@@ -23,14 +23,32 @@ export default function Rents() {
       fetchData();
     }, []);
 
+    const onDelete = async (id) => {
+        try {
+            await rents_service.delete(id);
+            setRents(rents.filter(rent => rent.id !== id));
+        } catch (error) {
+            console.error("Error deleting rent:", error);
+        }
+    };
+
+    const onPut = async (id, data) => {
+        try {
+            await rents_service.put(id, data);
+            // Handle any necessary updates after the put operation
+        } catch (error) {
+            console.error("Error updating rent:", error);
+        }
+    };
+
     // Define columns for the DataTable
     const columns = [
-      { header: "ID", key: "id" },
-      { header: "Client Name", key: "client.name" },
-      { header: "Client Phone", key: "client.phone" },
-      { header: "Apartment Address", key: "apartment.address" },
-      { header: "Start Date", key: "startDate" },
-      { header: "End Date", key: "endDate" }
+        { header: "ID", key: "id" },
+        { header: "Client Name", key: "client.name" },
+        { header: "Client Phone", key: "client.phone" },
+        { header: "Apartment Address", key: "apartment.address" },
+        { header: "Start Date", key: "startDate" },
+        { header: "End Date", key: "endDate" }
     ];
 
     return (
@@ -38,7 +56,16 @@ export default function Rents() {
             {loading ? (
                 <Loader/>
             ) : (
-                <DataTable columns={columns} itemsPerPage={10} rows={rents} />
+                <DataTable 
+                    showActions={true}
+                    showDeleteButton={true}
+                    showChangeButton={true}
+                    columns={columns} 
+                    itemsPerPage={10} 
+                    rows={rents} 
+                    onDelete={onDelete} 
+                    onPut={onPut} 
+                />
             )}
         </PageWrap>
     );

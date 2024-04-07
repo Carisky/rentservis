@@ -23,6 +23,23 @@ export default function LandLords() {
     fetchData();
   }, []);
 
+  const onDelete = async (id) => {
+    try {
+      await landlords_service.delete(id);
+      setLandlords(landlords.filter((landlord) => landlord.id !== id));
+    } catch (error) {
+      console.error("Error deleting landlord:", error);
+    }
+  };
+
+  const onPut = async (id, data) => {
+    try {
+      await landlords_service.put(id, data);
+    } catch (error) {
+      console.error("Error update landlord:", error);
+    }
+  };
+
   // Define columns for the DataTable
   const columns = [
     { header: "ID", key: "id" },
@@ -36,7 +53,16 @@ export default function LandLords() {
       {loading ? (
         <Loader/>
       ) : (
-        <DataTable columns={columns} itemsPerPage={10} rows={landlords} />
+        <DataTable
+          showActions={true}
+          showDeleteButton={true}
+          showChangeButton={true}
+          columns={columns}
+          onDelete={onDelete}
+          onPut={onPut}
+          itemsPerPage={10}
+          rows={landlords}
+        />
       )}
     </PageWrap>
   );

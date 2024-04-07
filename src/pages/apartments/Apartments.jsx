@@ -23,15 +23,30 @@ export default function Apartments() {
     fetchData();
   }, []);
 
+  const onDelete = async (id) => {
+    try {
+      await apartments_service.delete(id);
+      setApartments(apartments.filter((apartment) => apartment.id !== id));
+    } catch (error) {
+      console.error("Error deleting apartment:", error);
+    }
+  };
+
+  const onPut = async (id, data) => {
+    try {
+      await apartments_service.put(id, data);
+    } catch (error) {
+      console.error("Error updating apartment:", error);
+    }
+  };
+
   // Define columns for the DataTable
   const columns = [
     { header: "ID", key: "id" },
     { header: "Address", key: "address" },
     { header: "Number of Rooms", key: "numberOfRooms" },
     { header: "Rent Cost", key: "rentCost" },
-    { header: "Landlord Name", key: "landLord.name" },
-    { header: "Landlord Phone", key: "landLord.phone" },
-    { header: "Landlord Address", key: "landLord.address" }
+
   ];
 
   return (
@@ -39,7 +54,16 @@ export default function Apartments() {
       {loading ? (
         <Loader/>
       ) : (
-        <DataTable columns={columns} itemsPerPage={10} rows={apartments} />
+        <DataTable
+          columns={columns}
+          itemsPerPage={10}
+          rows={apartments}
+          showDeleteButton={true}
+          showActions={true}
+          showChangeButton={true}
+          onDelete={onDelete}
+          onPut={onPut}
+        />
       )}
     </PageWrap>
   );

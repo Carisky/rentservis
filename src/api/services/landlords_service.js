@@ -11,4 +11,23 @@ export default class landlords_service{
             throw error;
         }
     }
+    static async delete(id) {
+        try {
+            const response = await axios.delete(`${api_config.landlords}/${id}`);
+            return response;
+        } catch (error) {
+            console.error('Error delete landlord:', error);
+            throw error;
+        }
+    }
+
+    static async put(id, data) {
+        try {
+            const response = await axios.put(`${api_config.landlords}/${id}`, data);
+            return response;
+        } catch (error) {
+            console.error('Error update landlord:', error);
+            throw error;
+        }
+    }
 }
