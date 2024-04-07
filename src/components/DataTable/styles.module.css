@@ -1,12 +1,14 @@
 .table {
     width: 100%;
     border-collapse: collapse;
+    text-align: center;
   }
   
   .table_header {
     background-color: #f2f2f2;
     font-weight: bold;
     display: flex;
+    text-align: center;
   }
   .table_row{
     display: flex;
