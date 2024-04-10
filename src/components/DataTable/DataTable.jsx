@@ -62,9 +62,12 @@ export default function DataTable({
   });
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedRows = filteredRows.slice(startIndex, endIndex);
+  let endIndex = startIndex + itemsPerPage;
+  if (endIndex > filteredRows.length) {
+    endIndex = filteredRows.length;
+  }
 
+  const paginatedRows = filteredRows.slice(startIndex, endIndex);
   return (
     <div>
       <div className={styles.filters}>
@@ -98,9 +101,9 @@ export default function DataTable({
                   {column.key !== "id" ? (
                     <input
                       type="text"
-                      value={inputStates[rowIndex]?.[column.key] || ""}
+                      value={inputStates[rowIndex+((currentPage-1)*itemsPerPage)]?.[column.key] || ""}
                       onChange={(e) =>
-                        handleInputChange(rowIndex, column.key, e.target.value)
+                        handleInputChange(rowIndex+((currentPage-1)*itemsPerPage), column.key, e.target.value)
                       }
                     />
                   ) : (

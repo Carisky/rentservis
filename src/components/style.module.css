@@ -15,3 +15,17 @@
 .active{
     background-color: rgb(7, 77, 53);
 }
+.modal{
+    background-color: #fff;
+    height: 50vh;
+    width: 50vw;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+}
