@@ -30,4 +30,13 @@ export default class apartments_service{
             throw error;
         }
     }
+    static async create(data) {
+        try {
+            const response = await axios.post(`${api_config.apartments}`, data);
+            return response;
+        } catch (error) {
+            console.error('Error create apartment:', error);
+            throw error;
+        }
+    }
 }

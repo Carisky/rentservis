@@ -30,5 +30,14 @@ export default class clients_service{
             console.error('Error update client:', error);
             throw error;
         }
+    }
+    static async create(data) {
+        try {
+            const response = await axios.post(`${api_config.clients}`, data);
+            return response;
+        } catch (error) {
+            console.error('Error create client:', error);
+            throw error;
+        }
     }    
 }

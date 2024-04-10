@@ -29,4 +29,13 @@ export default class rents_service{
             throw error;
         }
     }
+    static async create(data) {
+        try {
+            const response = await axios.post(`${api_config.rents}`, data);
+            return response;
+        } catch (error) {
+            console.error('Error create rent:', error);
+            throw error;
+        }
+    } 
 }

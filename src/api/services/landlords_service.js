@@ -30,4 +30,13 @@ export default class landlords_service{
             throw error;
         }
     }
+    static async create(data) {
+        try {
+            const response = await axios.post(`${api_config.landlords}`, data);
+            return response;
+        } catch (error) {
+            console.error('Error create landlord:', error);
+            throw error;
+        }
+    } 
 }
